@@ -7,4 +7,4 @@
  * @github https://github.com/wadahkode/wadahkode
  * @since version 0.0.1
  */
-(async (root) => storyComponent({root, data: await sampleRequest()}))(document.getElementById('root'))
+(async (root) => typeof localStorage.getItem("userData") === "object" ? loginComponent({root: document.querySelector(".container")}) : storyComponent({root, data: await sampleRequest()}))(document.getElementById('root'))
