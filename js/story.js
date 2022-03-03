@@ -7,7 +7,6 @@
 // localStorage.removeItem("data")
 // localStorage.removeItem("dataLiked")
 // localStorage.removeItem("dataComment")
- 
 const storyComponent = (prop) => {
   if (localStorage.getItem("data")) {
     prop.data = JSON.parse(localStorage.getItem("data"));
@@ -55,11 +54,19 @@ const saveStory = async data => {
   }
   
   let id = parseInt(request.length) + 1
+  let name = "anonymous"
+  let title = titleStory.value.length < 1 ? "Untitled " + id : titleStory.value
+  
+  const user = await getUserData()
+  
+  if (user!== null) {
+    name = user[0].username
+  }
   
   data = {
-    id: id,
-    title: "Title " + id,
-    name: "Anonymous",
+    id,
+    title,
+    name,
     story: data,
     liked: [],
     comments: []
@@ -67,6 +74,7 @@ const saveStory = async data => {
   request.push(data)
   
   editorStory.value = ""
+  titleStory.value = ""
   btnStory.disabled = true
   
   localStorage.setItem("data", JSON.stringify(request))
@@ -75,6 +83,7 @@ const saveStory = async data => {
 
 const btnStory = document.querySelector(".btn-story")
 const editorStory = btnStory.previousElementSibling
+const titleStory = editorStory.previousElementSibling
 
 editorStory.onkeyup = event => {
   const target = event.currentTarget
