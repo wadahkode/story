@@ -52,3 +52,13 @@ const sampleRequest = () => {
   })
   //return JSON.parse(await (new Response(example)).text())
 }
+
+const getUserData = async () => {
+  let data = null
+  
+  if (localStorage.getItem("userData")) {
+    data = JSON.parse(localStorage.getItem("userData"));
+  }
+  
+  return await data
+}
