@@ -63,6 +63,10 @@ class RealtimeLiked {
     this.btnLike = document.querySelectorAll(".btn-like")
     this.btnLike.forEach(btn => btn.onclick = (event) => this.handleLiked(event))
     
+    if (this.btnLike.length < 1) {
+      return false
+    }
+    
     this.realtimeContext()
   }
   
