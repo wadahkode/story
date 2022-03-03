@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/index.css">
+  <title>story</title>
+</head>
+<body>
+	<nav class="navbar">
+	  <h1>Story</h1>
+	</nav>
+	
+	<div class="container">
+  	<form class="form-story" onsubmit="return saveStory(this)" method="post">
+  	  <textarea class="editor-story" placeholder="Write your story..."></textarea>
+  	  <button type="submit" class="btn-default btn-story" disabled>Send</button>
+  	</form>
+  	
+  	<div id="root"></div>
+	</div>
+	
+	
+  <script async src="js/request.js"></script>
+  <script async src="js/story.js"></script>
+  <script async src="js/index.js"></script>
+  <script async src="js/event/liked.js"></script>
+  <script async src="js/event/coments.js"></script>
+</body>
+</html>
