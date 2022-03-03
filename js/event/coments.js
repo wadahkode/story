@@ -105,14 +105,15 @@ class RealtimeComment {
   async start() {
     await this.getData()
     
-    console.log(this.data);
-    
     this.btnComment = document.querySelectorAll(".btn-comment")
     this.btnSubmit = document.querySelectorAll(".btn-submit")
     this.containerComments = document.querySelectorAll(".container-comment")
     this.editor = document.querySelectorAll(".editor")
     this.formComment = document.querySelectorAll(".form-comment")
     this.totalComments = document.querySelectorAll(".total-comments")
+    
+    if (this.btnComment.length < 1) return false
+    
     this.btnComment.forEach((btn) => {
       btn.onclick = (event) => this.handleToggleComment(event)
     })
