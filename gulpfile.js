@@ -8,7 +8,7 @@ const plumber = require("gulp-plumber");
 const babel = require("gulp-babel");
 const gulp = require("gulp");
 const connect = require("gulp-connect");
-const { dest, src, series, parallel } = require("gulp");
+const { dest, src, series, parallel, watch } = require("gulp");
 
 gulp.task("server", async function () {
   return connect.server({
