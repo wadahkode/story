@@ -4,19 +4,20 @@ const gulpUglify = require("gulp-uglify");
 const gulpHtmlmin = require("gulp-htmlmin");
 const clean = require("gulp-clean");
 const rename = require("gulp-rename");
-const gulpPlumber = require("gulp-plumber");
+const plumber = require("gulp-plumber");
 const babel = require("gulp-babel");
-const { dest, src, watch, series, parallel } = require("gulp");
-const { server, reload } = require("gulp-connect");
+const gulp = require("gulp");
+const connect = require("gulp-connect");
+const { dest, src, series, parallel } = require("gulp");
 
-const createServer = async () => {
-  return server({
+gulp.task("server", async function () {
+  return connect.server({
     root: "www",
     livereload: true,
   });
-};
+});
 
-const minifyCss = async () => {
+gulp.task("minifyCss", async function () {
   return src("./src/**/*.css")
     .pipe(
       gulpMinifyCss({
@@ -26,13 +27,13 @@ const minifyCss = async () => {
     .pipe(gulpConcat("styles.css"))
     .pipe(rename({ extname: ".min.css" }))
     .pipe(dest("./www/dist/css/"))
-    .pipe(reload());
-};
+    .pipe(connect.reload());
+});
 
-const minifyJs = async () => {
+gulp.task("minifyJs", async function () {
   return src(["./src/**/*.js"])
     .pipe(gulpConcat("bundle.js"))
-    .pipe(gulpPlumber())
+    .pipe(plumber())
     .pipe(
       babel({
         presets: [
@@ -48,10 +49,10 @@ const minifyJs = async () => {
     .pipe(rename({ extname: ".min.js" }))
     .pipe(gulpUglify())
     .pipe(dest("./www/dist/js/"))
-    .pipe(reload());
-};
+    .pipe(connect.reload());
+});
 
-const minifyHtml = async () => {
+gulp.task("minifyHtml", async function () {
   return src("src/*.html")
     .pipe(
       gulpHtmlmin({
@@ -59,28 +60,29 @@ const minifyHtml = async () => {
       })
     )
     .pipe(dest("www"))
-    .pipe(reload());
-};
+    .pipe(connect.reload());
+});
 
-const watching = async () => {
-  cleaning();
-  watch("./src/*.html", series(minifyHtml));
-  watch("./src/**/*.css", series(minifyCss));
-  watch("./src/**/*.js", series(minifyJs));
-};
+gulp.task("watch", async function () {
+  series("clean");
+  watch("./src/*.html", series("minifyHtml"));
+  watch("./src/**/*.css", series("minifyCss"));
+  watch("./src/**/*.js", series("minifyJs"));
+});
 
-const cleaning = async () => {
+gulp.task("clean", async function () {
   return src("www", {
     read: false,
     allowEmpty: true,
   }).pipe(clean());
-};
+});
 
-const build = async () => {
-  return series(cleaning, parallel(minifyHtml, minifyCss, minifyJs));
-};
+gulp.task(
+  "build",
+  series("clean", parallel("minifyHtml", "minifyCss", "minifyJs"))
+);
 
-exports.build = build;
-exports.default = series(
-  process.env === "production" ? build : parallel(watching, createServer)
+gulp.task(
+  "default",
+  series(process.env === "production" ? "build" : parallel("watch", "server"))
 );
