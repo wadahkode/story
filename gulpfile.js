@@ -64,20 +64,20 @@ const minifyHtml = async () => {
 
 const watching = async () => {
   cleaning();
-  watch("./src/**/*.js", series(minifyJs));
-  watch("./src/**/*.css", series(minifyCss));
   watch("./src/*.html", series(minifyHtml));
+  watch("./src/**/*.css", series(minifyCss));
+  watch("./src/**/*.js", series(minifyJs));
 };
 
 const cleaning = async () => {
-  return src("www/dist", {
+  return src("www", {
     read: false,
     allowEmpty: true,
   }).pipe(clean());
 };
 
 const build = async () => {
-  return series(cleaning, parallel(minifyCss, minifyJs, minifyHtml));
+  return series(cleaning, parallel(minifyHtml, minifyCss, minifyJs));
 };
 
 exports.build = build;
